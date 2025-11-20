@@ -5,14 +5,21 @@ namespace MonthlyClaimsApp.Controllers
 {
     public class AccountController : Controller
     {
-        // Temporary in-memory users. Later, you can fetch from DB.
-        private static List<Users> _users = new List<Users>
+        public static List<Users> UsersList = new List<Users>
         {
             new Users { UserID = 1, Username = "lecturer1", Password = "pass123", Role = "Lecturer" },
-            new Users { UserID = 2, Username = "coordinator1", Password = "pass123", Role = "Program Coordinator" },
-            new Users { UserID = 3, Username = "manager1", Password = "pass123", Role = "Academic Manager" },
-            new Users { UserID = 4, Username = "hr1", Password = "pass123", Role = "HR" }
+            new Users { UserID = 2, Username = "lecturer2", Password = "pass123", Role = "Lecturer" },
+            new Users { UserID = 3, Username = "coordinator1", Password = "pass123", Role = "Program Coordinator" },
+            new Users { UserID = 4, Username = "manager1", Password = "pass123", Role = "Academic Manager" },
+            new Users { UserID = 5, Username = "hr1", Password = "pass123", Role = "HR" }
         };
+
+        public static void AddUser(Users user)
+        {
+            if (user == null) return;
+            user.UserID = UsersList.Count > 0 ? UsersList.Max(u => u.UserID) + 1 : 1;
+            UsersList.Add(user);
+        }
 
         [HttpGet]
         public IActionResult Login()
@@ -23,7 +30,7 @@ namespace MonthlyClaimsApp.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            var user = _users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            var user = UsersList.FirstOrDefault(u => u.Username == username && u.Password == password);
             if (user != null)
             {
                 HttpContext.Session.SetString("Username", user.Username);

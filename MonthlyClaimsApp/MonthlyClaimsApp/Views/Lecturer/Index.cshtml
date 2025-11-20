@@ -18,6 +18,7 @@
         }
 
         <form asp-action="SubmitClaim" method="post" enctype="multipart/form-data">
+
             <div class="form-group mb-3">
                 <label asp-for="LecturerName"></label>
                 <input asp-for="LecturerName" class="form-control" required />
@@ -30,12 +31,18 @@
 
             <div class="form-group mb-3">
                 <label asp-for="HoursWorked"></label>
-                <input asp-for="HoursWorked" type="number" class="form-control" required />
+                <input asp-for="HoursWorked" type="number" class="form-control" id="hoursInput" required />
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="HourlyRate"></label>
-                <input asp-for="HourlyRate" type="number" step="0.01" class="form-control" required />
+                <input asp-for="HourlyRate" type="number" step="0.01" class="form-control" id="rateInput" required />
+            </div>
+
+            <!-- AUTO-CALCULATED TOTAL AMOUNT -->
+            <div class="form-group mb-3">
+                <label>Total Amount</label>
+                <input type="number" class="form-control" id="totalAmount" readonly />
             </div>
 
             <div class="form-group mb-3">
@@ -48,7 +55,25 @@
                 <textarea asp-for="Description" class="form-control"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit Claim</button>
+            <button type="submit" class="btn btn-primary w-100">Submit Claim</button>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function calculateTotal() {
+            let hours = parseFloat($("#hoursInput").val()) || 0;
+            let rate = parseFloat($("#rateInput").val()) || 0;
+            let total = hours * rate;
+
+            $("#totalAmount").val(total.toFixed(2));
+        }
+
+        $("#hoursInput, #rateInput").on("input", function () {
+            calculateTotal();
+        });
+    </script>
+}

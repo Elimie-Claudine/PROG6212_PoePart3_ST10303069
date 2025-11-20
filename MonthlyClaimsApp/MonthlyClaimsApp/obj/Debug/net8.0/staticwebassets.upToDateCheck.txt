@@ -62,7 +62,9 @@ wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\uploads\012a3129-0ff1-45b6-9f49-db585870691f_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\032378f6-30be-4c5a-b0da-a8279aabde30_ABCRetailers - Models Code Snapshots.pdf
 wwwroot\uploads\05bb699e-1b89-4872-8063-9e0c38f9a734_ABCRetailers - Product View Code Snapshots.docx
+wwwroot\uploads\2eba69d1-43bf-42d2-864e-506105c2ef8a_ABCRetailers - Order View Code Snapshots.docx
 wwwroot\uploads\3d14e961-5b03-4aae-a48b-0caec884c574_ABCRetailers - Home View Code Snapshots.docx
 wwwroot\uploads\4cd13173-73ba-4802-a3ce-597400f0ff30_ABCRetailers - Customer View Code Snapshots.docx
 wwwroot\uploads\52396ec4-f6c9-40d8-800a-e54393dcfd25_ABCRetailers - Customer View Code Snapshots.docx
@@ -71,6 +73,7 @@ wwwroot\uploads\5c657948-b97c-46d2-8ccf-155d82b9c9e3_ABCRetailers - Order View C
 wwwroot\uploads\6026af5a-6e33-42ed-be4f-ddbecf5d8bef_ABCRetailers - Product View Code Snapshots.docx
 wwwroot\uploads\6b9ec696-553d-4ce4-b250-241167cb8687_ABCRetailers - Models Code Snapshots.pdf
 wwwroot\uploads\6feba25a-b8f9-49d2-a429-107ab2daf135_ABCRetailers - Product View Code Snapshots.docx
+wwwroot\uploads\954075ca-77b7-42c7-90f8-63db6d863eaf_CLDV6211_MO.docx
 wwwroot\uploads\9c8e0216-fe0a-4786-b923-09f34791f7ac_ABCRetailers - Home View Code Snapshots.docx
 wwwroot\uploads\a44820fc-f088-4bca-8bde-080761f0b2e2_ABCRetailers - Customer View Code Snapshots.docx
 wwwroot\uploads\ABCRetailers - Home View Code Snapshots.docx

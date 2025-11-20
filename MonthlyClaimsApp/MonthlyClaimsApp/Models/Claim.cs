@@ -16,6 +16,8 @@ namespace MonthlyClaimsApp.Models
         public string? Status { get; set; }
         public string? VerifiedBy { get; set; }    
         public string? VerifiedByRole { get; set; }  
-        public DateTime? VerifiedDate { get; set; }   
+        public DateTime? VerifiedDate { get; set; }
+        public string? SubmittedBy { get; set; }
+
     }
 }
