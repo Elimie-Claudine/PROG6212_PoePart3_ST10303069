@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MonthlyClaimsApp.Models.Claim>
+
+<h2>Pending Claims for Approval</h2>
+
+@if (!Model.Any())
+{
+    <p>No claims pending.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lecturer</th>
+                <th>Hours</th>
+                <th>Rate</th>
+                <th>Total</th>
+                <th>Document/Desc</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td>@claim.ClaimID</td>
+                    <td>@claim.LecturerName</td>
+                    <td>@claim.HoursWorked</td>
+                    <td>@claim.HourlyRate</td>
+                    <td>@claim.TotalAmount</td>
+                    <td>@(string.IsNullOrEmpty(claim.DocumentName) ? claim.Description : claim.DocumentName)</td>
+                    <td>@claim.Status</td>
+                    <td>
+                        <form asp-action="VerifyClaim" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@claim.ClaimID" />
+                            <button type="submit" name="actionType" value="approve" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form asp-action="VerifyClaim" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@claim.ClaimID" />
+                            <button type="submit" name="actionType" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

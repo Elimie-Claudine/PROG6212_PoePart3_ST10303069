@@ -1,0 +1,80 @@
+wwwroot\css\site.css
+wwwroot\favicon.ico
+wwwroot\js\site.js
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css.map
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css
+wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
+wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
+wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
+wwwroot\lib\bootstrap\LICENSE
+wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.js
+wwwroot\lib\jquery-validation-unobtrusive\dist\jquery.validate.unobtrusive.min.js
+wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+wwwroot\lib\jquery-validation\dist\additional-methods.js
+wwwroot\lib\jquery-validation\dist\additional-methods.min.js
+wwwroot\lib\jquery-validation\dist\jquery.validate.js
+wwwroot\lib\jquery-validation\dist\jquery.validate.min.js
+wwwroot\lib\jquery-validation\LICENSE.md
+wwwroot\lib\jquery\dist\jquery.js
+wwwroot\lib\jquery\dist\jquery.min.js
+wwwroot\lib\jquery\dist\jquery.min.map
+wwwroot\lib\jquery\dist\jquery.slim.js
+wwwroot\lib\jquery\dist\jquery.slim.min.js
+wwwroot\lib\jquery\dist\jquery.slim.min.map
+wwwroot\lib\jquery\LICENSE.txt
+wwwroot\uploads\012a3129-0ff1-45b6-9f49-db585870691f_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\05bb699e-1b89-4872-8063-9e0c38f9a734_ABCRetailers - Product View Code Snapshots.docx
+wwwroot\uploads\3d14e961-5b03-4aae-a48b-0caec884c574_ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\4cd13173-73ba-4802-a3ce-597400f0ff30_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\52396ec4-f6c9-40d8-800a-e54393dcfd25_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\5b5c5159-5918-4958-a066-1669666b2e2b_ABCRetailers - Order View Code Snapshots.docx
+wwwroot\uploads\5c657948-b97c-46d2-8ccf-155d82b9c9e3_ABCRetailers - Order View Code Snapshots.docx
+wwwroot\uploads\6026af5a-6e33-42ed-be4f-ddbecf5d8bef_ABCRetailers - Product View Code Snapshots.docx
+wwwroot\uploads\6b9ec696-553d-4ce4-b250-241167cb8687_ABCRetailers - Models Code Snapshots.pdf
+wwwroot\uploads\6feba25a-b8f9-49d2-a429-107ab2daf135_ABCRetailers - Product View Code Snapshots.docx
+wwwroot\uploads\9c8e0216-fe0a-4786-b923-09f34791f7ac_ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\a44820fc-f088-4bca-8bde-080761f0b2e2_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\be16f0f4-472a-4476-a858-25bb493cc1d2_ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\c06fe432-536b-4267-9e72-575dbef84a63_ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\e44665e4-68ea-4f4a-b8fa-2d341b9ebe86_ABCRetailers - Customer View Code Snapshots.docx
+wwwroot\uploads\f40c62d5-f8cb-41ae-89c7-d60dc3c09ba1_ABCRetailers - Home View Code Snapshots.docx

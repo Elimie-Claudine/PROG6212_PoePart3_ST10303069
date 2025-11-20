@@ -1,0 +1,70 @@
+﻿@model IEnumerable<MonthlyClaimsApp.Models.Claim>
+
+@{
+    ViewData["Title"] = "Track Claims";
+}
+
+<h2 class="text-center mb-4">Submitted Claims</h2>
+
+@if (!Model.Any())
+{
+    <p>No claims submitted yet.</p>
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Submit New Claim</a>
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th>Claim ID</th>
+                <th>Lecturer Name</th>
+                <th>Lecturer ID</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>Total Amount</th>
+                <th>Document</th>
+                <th>Comment</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td>@claim.ClaimID</td>
+                    <td>@claim.LecturerName</td>
+                    <td>@claim.LecturerID</td>
+                    <td>@claim.HoursWorked</td>
+                    <td>@claim.HourlyRate</td>
+                    <td>@claim.TotalAmount</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(claim.DocumentName))
+                        {
+                            <a href="@claim.DocumentName" target="_blank">Download</a>
+                        }
+                        else if (!string.IsNullOrWhiteSpace(claim.Description))
+                        {
+                            @claim.Description
+                        }
+                        else
+                        {
+                            <em>No document or description</em>
+                        }
+                    </td>
+
+                    <td>@claim.Description</td>
+                    <td>
+                        <span class="badge bg-info">@claim.Status</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Submit New Claim</a>
+    </div>
+
+}

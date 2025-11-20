@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MonthlyClaimsApp.Models.Lecturer>
+
+<h2>Manage Lecturers</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add Lecturer</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lecturer in Model)
+        {
+            <tr>
+                <td>@lecturer.LecturerID</td>
+                <td>@lecturer.Name</td>
+                <td>@lecturer.Email</td>
+                <td>@lecturer.Department</td>
+            </tr>
+        }
+    </tbody>
+</table>
