@@ -23,6 +23,12 @@ namespace MonthlyClaimsApp.Controllers
             return View(lecturers);
         }
 
+        public IActionResult ClaimReport()
+        {
+            var approvedClaims = _context.Claims.Where(c => c.Status == "Approved").ToList();
+            return View(approvedClaims);
+        }
+
 
         public IActionResult Create()
         {

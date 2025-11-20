@@ -61,7 +61,6 @@ namespace MonthlyClaimsApp.Controllers
                     file.CopyTo(stream);
                 }
 
-                // store a virtual path so Download link in views works
                 claim.DocumentName = "/uploads/" + uniqueFileName;
             }
             else if (!string.IsNullOrWhiteSpace(claim.Description))
@@ -91,11 +90,9 @@ namespace MonthlyClaimsApp.Controllers
 
         public IActionResult TrackClaims()
         {
-            // Show only claims for the logged in lecturer (if possible)
             var username = HttpContext.Session.GetString("Username");
             if (string.IsNullOrWhiteSpace(username))
             {
-                // If no login info, show everything (fallback)
                 return View(_claims);
             }
 

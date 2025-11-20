@@ -81,3 +81,4 @@ wwwroot\uploads\be16f0f4-472a-4476-a858-25bb493cc1d2_ABCRetailers - Home View Co
 wwwroot\uploads\c06fe432-536b-4267-9e72-575dbef84a63_ABCRetailers - Home View Code Snapshots.docx
 wwwroot\uploads\e44665e4-68ea-4f4a-b8fa-2d341b9ebe86_ABCRetailers - Customer View Code Snapshots.docx
 wwwroot\uploads\f40c62d5-f8cb-41ae-89c7-d60dc3c09ba1_ABCRetailers - Home View Code Snapshots.docx
+wwwroot\uploads\f46ca846-1e83-4c5d-8eee-72742b90506c_ABCRetailers - Order View Code Snapshots.docx
