@@ -29,13 +29,13 @@ namespace MonthlyClaimsApp.Controllers
             return View(approvedClaims);
         }
 
-
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateLecturer(Lecturer lecturer, string username, string password)
         {
             if (lecturer == null)
@@ -45,7 +45,11 @@ namespace MonthlyClaimsApp.Controllers
             }
 
             if (!ModelState.IsValid)
+                return View("Create", lecturer);
+
+            if (_context.Users.Any(u => u.Username == username))
             {
+                ModelState.AddModelError("Username", "Username already exists.");
                 return View("Create", lecturer);
             }
 
@@ -58,11 +62,12 @@ namespace MonthlyClaimsApp.Controllers
                 Password = string.IsNullOrWhiteSpace(password) ? "changeme123" : password,
                 Role = "Lecturer"
             };
-
-            AccountController.AddUser(newUser);
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
 
             TempData["Message"] = "Lecturer added successfully!";
             return RedirectToAction("Index");
         }
+
     }
 }

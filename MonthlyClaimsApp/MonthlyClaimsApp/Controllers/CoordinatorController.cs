@@ -58,14 +58,14 @@ namespace MonthlyClaimsApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyClaim(int id, string actionType, string rejectionReason)
         {
             var claim = await _context.Claims.FindAsync(id);
-
             if (claim == null)
                 return RedirectToAction("Index");
 
-            var userRole = HttpContext.Session.GetString("UserRole") ?? "Program Coordinator";
+            var userRole = HttpContext.Session.GetString("UserRole") ?? "Coordinator";
             var userName = HttpContext.Session.GetString("Username") ?? userRole;
 
             if (actionType == "approve")
@@ -86,8 +86,8 @@ namespace MonthlyClaimsApp.Controllers
             claim.VerifiedDate = DateTime.Now;
 
             await _context.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
+
     }
 }

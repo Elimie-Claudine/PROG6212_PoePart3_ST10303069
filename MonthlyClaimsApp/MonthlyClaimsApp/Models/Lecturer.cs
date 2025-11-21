@@ -9,5 +9,6 @@ namespace MonthlyClaimsApp.Models
         public string? Name { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
+        public List<Claim>? Claims { get; set; } 
     }
 }

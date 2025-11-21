@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MonthlyClaimsApp.Models
 {
@@ -6,20 +7,27 @@ namespace MonthlyClaimsApp.Models
     {
         [Key]
         public int ClaimID { get; set; }
+
+        [ForeignKey("Lecturer")]
         public int LecturerID { get; set; }
+        public Lecturer? Lecturer { get; set; }
         public string? LecturerName { get; set; }
         public string? DocumentName { get; set; }
+
         public decimal HoursWorked { get; set; }
         public decimal HourlyRate { get; set; }
-        public decimal TotalAmount { get; set; }
+
+        public decimal TotalAmount { get; set; } 
         public string? Description { get; set; }
-        public string? Status { get; set; }
-        public string? VerifiedBy { get; set; }    
-        public string? VerifiedByRole { get; set; }  
+        public string Status { get; set; } = "Pending";
+        public string? VerifiedBy { get; set; }
+        public string? VerifiedByRole { get; set; }
         public DateTime? VerifiedDate { get; set; }
+
         public string? SubmittedBy { get; set; }
         public string? AutoFlagReason { get; set; }
         public string? RejectionReason { get; set; }
 
+        public List<Document>? Documents { get; set; } 
     }
 }

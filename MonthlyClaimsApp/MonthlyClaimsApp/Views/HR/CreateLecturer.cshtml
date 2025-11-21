@@ -6,6 +6,7 @@
 <h2 class="text-center mb-4">Create Lecturer</h2>
 
 <form asp-action="CreateLecturer" method="post" class="shadow p-4 rounded bg-light mx-auto" style="max-width:500px;">
+    <div asp-validation-summary="All" class="text-danger mb-2"></div>
     <div class="mb-3">
         <label asp-for="Name" class="form-label fw-bold"></label>
         <input asp-for="Name" class="form-control" required />

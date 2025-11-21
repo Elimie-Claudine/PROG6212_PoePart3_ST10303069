@@ -25,6 +25,7 @@ namespace MonthlyClaimsApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SubmitClaim(Claim claim, IFormFile? file)
         {
             if (claim == null)
@@ -42,13 +43,10 @@ namespace MonthlyClaimsApp.Controllers
             if (!ModelState.IsValid)
                 return View(claim);
 
-            // Auto calculate amount
             claim.TotalAmount = claim.HoursWorked * claim.HourlyRate;
 
-            // Default status
             claim.Status = "Pending";
 
-            // Handle file upload
             if (file != null && file.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
@@ -66,7 +64,6 @@ namespace MonthlyClaimsApp.Controllers
                 claim.DocumentName = "/uploads/" + uniqueFileName;
             }
 
-            // Handle "SubmittedBy"
             var username = HttpContext.Session.GetString("Username");
             if (!string.IsNullOrWhiteSpace(username))
             {
@@ -76,13 +73,13 @@ namespace MonthlyClaimsApp.Controllers
                 claim.SubmittedBy = username;
             }
 
-            // SAVE TO DATABASE
             _context.Claims.Add(claim);
             _context.SaveChanges();
 
             TempData["Message"] = "Claim submitted successfully!";
             return RedirectToAction("TrackClaims");
         }
+
 
         public IActionResult TrackClaims()
         {
