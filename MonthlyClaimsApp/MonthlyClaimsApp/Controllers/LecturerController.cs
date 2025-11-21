@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MonthlyClaimsApp.Data;
 using MonthlyClaimsApp.Models;
 using System.IO;
@@ -21,30 +22,37 @@ namespace MonthlyClaimsApp.Controllers
 
         public IActionResult SubmitClaim()
         {
+            ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
             return View();
         }
 
+
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult SubmitClaim(Claim claim, IFormFile? file)
         {
+            // 1️⃣ Basic null check
             if (claim == null)
             {
                 TempData["ErrorMessage"] = "Claim data is missing.";
-                return View(claim);
+                return RedirectToAction("SubmitClaim");
             }
 
+            // 2️⃣ Validate HoursWorked and HourlyRate
             if (claim.HoursWorked <= 0)
                 ModelState.AddModelError(nameof(claim.HoursWorked), "Hours must be > 0.");
-
             if (claim.HourlyRate <= 0)
                 ModelState.AddModelError(nameof(claim.HourlyRate), "Rate must be > 0.");
 
             if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please correct the errors.";
+
+                ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
                 return View(claim);
+            }
 
             claim.TotalAmount = claim.HoursWorked * claim.HourlyRate;
-
             claim.Status = "Pending";
 
             if (file != null && file.Length > 0)
@@ -64,21 +72,35 @@ namespace MonthlyClaimsApp.Controllers
                 claim.DocumentName = "/uploads/" + uniqueFileName;
             }
 
-            var username = HttpContext.Session.GetString("Username");
-            if (!string.IsNullOrWhiteSpace(username))
-            {
-                if (string.IsNullOrWhiteSpace(claim.LecturerName))
-                    claim.LecturerName = username;
 
-                claim.SubmittedBy = username;
+            if (claim.LecturerID > 0)
+            {
+                var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == claim.LecturerID);
+                if (lecturer == null)
+                {
+                    TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
+                    ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
+                    return View(claim);
+                }
+
+                claim.LecturerName = lecturer.Name;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Please select a lecturer.";
+                ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
+                return View(claim);
             }
 
+            // 6️⃣ Save claim
             _context.Claims.Add(claim);
             _context.SaveChanges();
 
             TempData["Message"] = "Claim submitted successfully!";
-            return RedirectToAction("TrackClaims");
+            return RedirectToAction("SubmitClaim");
         }
+
+
 
 
         public IActionResult TrackClaims()
@@ -88,15 +110,20 @@ namespace MonthlyClaimsApp.Controllers
             if (string.IsNullOrWhiteSpace(username))
                 return View(_context.Claims.ToList());
 
+            var lecturer = _context.Lecturer.FirstOrDefault(l => l.Email == username || l.Name == username);
+            if (lecturer == null)
+            {
+                TempData["ErrorMessage"] = "Lecturer not found.";
+                return View(new List<Claim>());
+            }
+
             var myClaims = _context.Claims
-                .Where(c =>
-                    c.LecturerName == username ||
-                    c.SubmittedBy == username ||
-                    (c.LecturerID != null && c.LecturerID.ToString() == username)
-                ).ToList();
+                .Where(c => c.LecturerID == lecturer.LecturerID)
+                .ToList();
 
             return View(myClaims);
         }
+
 
         [HttpPost]
         public IActionResult UploadDocument(int claimId, IFormFile file)

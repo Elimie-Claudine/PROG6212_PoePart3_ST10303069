@@ -21,13 +21,10 @@
             <div asp-validation-summary="All" class="text-danger mb-2"></div>
 
             <div class="form-group mb-3">
-                <label asp-for="LecturerName"></label>
-                <input asp-for="LecturerName" class="form-control" required />
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="LecturerID"></label>
-                <input asp-for="LecturerID" class="form-control" required />
+                <label>Select Lecturer</label>
+                <select asp-for="LecturerID" class="form-control" asp-items="ViewBag.Lecturers" required>
+                    <option value="">--Select--</option>
+                </select>
             </div>
 
             <div class="form-group mb-3">
@@ -40,7 +37,7 @@
                 <input asp-for="HourlyRate" type="number" step="0.01" class="form-control" id="rateInput" required />
             </div>
 
-            <!-- AUTO-CALCULATED TOTAL AMOUNT -->
+
             <div class="form-group mb-3">
                 <label>Total Amount</label>
                 <input type="number" class="form-control" id="totalAmount" readonly />
