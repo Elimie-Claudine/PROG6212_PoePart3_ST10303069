@@ -22,33 +22,8 @@ namespace MonthlyClaimsApp.Controllers
 
         public IActionResult SubmitClaim()
         {
-            var lecturerId = HttpContext.Session.GetInt32("LecturerID");
-
-            if (lecturerId == null)
-            {
-                TempData["ErrorMessage"] = "Lecturer not logged in.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == lecturerId);
-
-            if (lecturer == null)
-            {
-                TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            var claim = new Claim
-            {
-                LecturerID = lecturer.LecturerID,
-                LecturerName = lecturer.Name
-            };
-
             return View();
         }
-
-
-
 
         [HttpPost]
         public IActionResult SubmitClaim(Claim claim, IFormFile? file)
@@ -64,25 +39,25 @@ namespace MonthlyClaimsApp.Controllers
             var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == lecturerId);
             if (lecturer == null)
             {
-                TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
+                TempData["ErrorMessage"] = "Lecturer not found.";
                 return RedirectToAction("Login", "Account");
             }
 
-            // Assign lecturer info automatically
+            // AUTO-ASSIGN LECTURER INFORMATION
             claim.LecturerID = lecturer.LecturerID;
             claim.LecturerName = lecturer.Name;
 
-            // Validate hours/rate and calculate total
             if (claim.HoursWorked <= 0 || claim.HourlyRate <= 0)
             {
                 TempData["ErrorMessage"] = "Hours and rate must be > 0.";
                 return View(claim);
             }
 
+            // Calculate total amount
             claim.TotalAmount = claim.HoursWorked * claim.HourlyRate;
             claim.Status = "Pending";
 
-            // Save document if uploaded
+            // FILE UPLOAD HANDLING
             if (file != null && file.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
@@ -91,6 +66,7 @@ namespace MonthlyClaimsApp.Controllers
 
                 var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     file.CopyTo(stream);
@@ -103,34 +79,25 @@ namespace MonthlyClaimsApp.Controllers
             _context.SaveChanges();
 
             TempData["Message"] = "Claim submitted successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("TrackClaims");
         }
-
-
-
-
 
         public IActionResult TrackClaims()
         {
-            var username = HttpContext.Session.GetString("Username");
+            var lecturerId = HttpContext.Session.GetInt32("LecturerID");
 
-            if (string.IsNullOrWhiteSpace(username))
-                return View(_context.Claims.ToList());
-
-            var lecturer = _context.Lecturer.FirstOrDefault(l => l.Email == username || l.Name == username);
-            if (lecturer == null)
+            if (lecturerId == null)
             {
-                TempData["ErrorMessage"] = "Lecturer not found.";
-                return View(new List<Claim>());
+                TempData["ErrorMessage"] = "Not logged in.";
+                return RedirectToAction("Login", "Account");
             }
 
             var myClaims = _context.Claims
-                .Where(c => c.LecturerID == lecturer.LecturerID)
+                .Where(c => c.LecturerID == lecturerId)
                 .ToList();
 
             return View(myClaims);
         }
-
 
         [HttpPost]
         public IActionResult UploadDocument(int claimId, IFormFile file)

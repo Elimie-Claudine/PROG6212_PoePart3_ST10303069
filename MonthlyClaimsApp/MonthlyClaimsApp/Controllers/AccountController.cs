@@ -28,8 +28,22 @@ namespace MonthlyClaimsApp.Controllers
 
             if (user != null)
             {
+                // Save username + role
                 HttpContext.Session.SetString("Username", user.Username);
                 HttpContext.Session.SetString("UserRole", user.Role);
+
+                // FIXED: Correct lookup for lecturer
+                if (user.Role == "Lecturer")
+                {
+                    var lecturer = _context.Lecturer
+                        .FirstOrDefault(l => l.Email == user.Username || l.Name == user.Username);
+
+                    if (lecturer != null)
+                    {
+                        HttpContext.Session.SetInt32("LecturerID", lecturer.LecturerID);
+                    }
+                }
+
                 return RedirectToAction("Index", "Home");
             }
 
