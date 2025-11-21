@@ -1,11 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MonthlyClaimsApp.Data;
 using MonthlyClaimsApp.Models;
 
 namespace MonthlyClaimsApp.Controllers
 {
     public class CoordinatorController : Controller
     {
-        private static List<Claim> _claims => LecturerControllerHelper.GetClaims();
+        private readonly ApplicationDbContext _context;
+
+        public CoordinatorController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult SelectRole()
         {
@@ -19,71 +26,68 @@ namespace MonthlyClaimsApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userRole = HttpContext.Session.GetString("UserRole");
+
             if (string.IsNullOrEmpty(userRole))
                 return RedirectToAction("SelectRole");
 
             ViewBag.UserRole = userRole;
 
-            List<Claim> toShow;
+            List<Claim> claims;
 
             if (userRole == "Academic Manager")
             {
-                toShow = _claims.Where(c => c.Status.Contains("waiting for Academic Manager") || c.Status == "Pending Manager Approval").ToList();
+                claims = await _context.Claims
+                    .Where(c =>
+                        c.Status.Contains("waiting for Academic Manager") ||
+                        c.Status == "Pending Manager Approval")
+                    .ToListAsync();
             }
             else
             {
-                toShow = _claims.Where(c => c.Status == "Pending" || c.Status.Contains("Returned to Lecturer")).ToList();
+                claims = await _context.Claims
+                    .Where(c =>
+                        c.Status == "Pending" ||
+                        c.Status.Contains("Returned to Lecturer"))
+                    .ToListAsync();
             }
 
-            return View(toShow);
+            return View(claims);
         }
 
         [HttpPost]
-        public IActionResult VerifyClaim(int id, string actionType)
+        public async Task<IActionResult> VerifyClaim(int id, string actionType, string rejectionReason)
         {
-            var claim = _claims.FirstOrDefault(c => c.ClaimID == id);
-            if (claim != null)
-            {
-                var userRole = HttpContext.Session.GetString("UserRole") ?? "Program Coordinator";
-                var userName = HttpContext.Session.GetString("Username") ?? userRole;
+            var claim = await _context.Claims.FindAsync(id);
 
-                if (actionType == "approve")
-                {
-                    if (userRole == "Academic Manager")
-                    {
-                        claim.Status = "Approved";
-                        claim.VerifiedByRole = userRole;
-                        claim.VerifiedBy = userName;
-                        claim.VerifiedDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        claim.Status = "Approved by Coordinator, waiting for Academic Manager";
-                        claim.VerifiedByRole = userRole;
-                        claim.VerifiedBy = userName;
-                        claim.VerifiedDate = DateTime.Now;
-                    }
-                }
-                else 
-                {
-                    claim.Status = $"Rejected by {userRole}, returned to Lecturer";
-                    claim.VerifiedByRole = userRole;
-                    claim.VerifiedBy = userName;
-                    claim.VerifiedDate = DateTime.Now;
-                }
+            if (claim == null)
+                return RedirectToAction("Index");
+
+            var userRole = HttpContext.Session.GetString("UserRole") ?? "Program Coordinator";
+            var userName = HttpContext.Session.GetString("Username") ?? userRole;
+
+            if (actionType == "approve")
+            {
+                if (userRole == "Academic Manager")
+                    claim.Status = "Approved";
+                else
+                    claim.Status = "Approved by Coordinator, waiting for Academic Manager";
             }
+            else
+            {
+                claim.Status = $"Rejected by {userRole}, returned to Lecturer";
+                claim.RejectionReason = rejectionReason;
+            }
+
+            claim.VerifiedByRole = userRole;
+            claim.VerifiedBy = userName;
+            claim.VerifiedDate = DateTime.Now;
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
-
-    }
-
-    public static class LecturerControllerHelper
-    {
-        private static List<Claim> _sharedClaims = new List<Claim>();
-        public static List<Claim> GetClaims() => _sharedClaims;
     }
 }

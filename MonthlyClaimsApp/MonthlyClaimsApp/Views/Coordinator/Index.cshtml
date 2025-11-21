@@ -8,14 +8,14 @@
 }
 else
 {
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Lecturer</th>
                 <th>Hours</th>
                 <th>Rate</th>
-                <th>Total</th>
+                <th>Total (Auto-Calculated)</th>
                 <th>Document/Desc</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -29,21 +29,48 @@ else
                     <td>@claim.LecturerName</td>
                     <td>@claim.HoursWorked</td>
                     <td>@claim.HourlyRate</td>
-                    <td>@claim.TotalAmount</td>
-                    <td>@(string.IsNullOrEmpty(claim.DocumentName) ? claim.Description : claim.DocumentName)</td>
-                    <td>@claim.Status</td>
+
+                    <!-- AUTO CALCULATION DISPLAY -->
+                    <td>
+                        @claim.TotalAmount
+                        <span class="text-muted small d-block">
+                            (@claim.HoursWorked × @claim.HourlyRate)
+                        </span>
+                    </td>
+
+                    <td>
+                        @(string.IsNullOrEmpty(claim.DocumentName)
+                                        ? claim.Description
+                                        : claim.DocumentName)
+            </td>
+
+                    <td>
+                        <span class="badge bg-warning text-dark">@claim.Status</span>
+                    </td>
+
                     <td>
                         <form asp-action="VerifyClaim" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@claim.ClaimID" />
-                            <button type="submit" name="actionType" value="approve" class="btn btn-success btn-sm">Approve</button>
+                            <button type="submit"
+                                    name="actionType"
+                                    value="approve"
+                                    class="btn btn-success btn-sm">
+                                Approve
+                            </button>
                         </form>
+
                         <form asp-action="VerifyClaim" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@claim.ClaimID" />
-                            <button type="submit" name="actionType" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                            <button type="submit"
+                                    name="actionType"
+                                    value="reject"
+                                    class="btn btn-danger btn-sm">
+                                Reject
+                            </button>
                         </form>
                     </td>
                 </tr>
-            }
+                }
         </tbody>
     </table>
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonthlyClaimsApp.Data;
 using MonthlyClaimsApp.Models;
 using System.IO;
 
@@ -6,7 +7,12 @@ namespace MonthlyClaimsApp.Controllers
 {
     public class LecturerController : Controller
     {
-        private static List<Claim> _claims => LecturerControllerHelper.GetClaims();
+        private readonly ApplicationDbContext _context;
+
+        public LecturerController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Index()
         {
@@ -28,25 +34,21 @@ namespace MonthlyClaimsApp.Controllers
             }
 
             if (claim.HoursWorked <= 0)
-            {
-                ModelState.AddModelError(nameof(claim.HoursWorked), "Hours worked must be greater than zero.");
-            }
+                ModelState.AddModelError(nameof(claim.HoursWorked), "Hours must be > 0.");
 
             if (claim.HourlyRate <= 0)
-            {
-                ModelState.AddModelError(nameof(claim.HourlyRate), "Hourly rate must be greater than zero.");
-            }
+                ModelState.AddModelError(nameof(claim.HourlyRate), "Rate must be > 0.");
 
             if (!ModelState.IsValid)
-            {
                 return View(claim);
-            }
 
+            // Auto calculate amount
             claim.TotalAmount = claim.HoursWorked * claim.HourlyRate;
 
-            claim.ClaimID = _claims.Count + 1;
+            // Default status
             claim.Status = "Pending";
 
+            // Handle file upload
             if (file != null && file.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
@@ -63,16 +65,8 @@ namespace MonthlyClaimsApp.Controllers
 
                 claim.DocumentName = "/uploads/" + uniqueFileName;
             }
-            else if (!string.IsNullOrWhiteSpace(claim.Description))
-            {
-                claim.DocumentName = "";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Please upload a supporting document or add a description.";
-                return View(claim);
-            }
 
+            // Handle "SubmittedBy"
             var username = HttpContext.Session.GetString("Username");
             if (!string.IsNullOrWhiteSpace(username))
             {
@@ -82,7 +76,9 @@ namespace MonthlyClaimsApp.Controllers
                 claim.SubmittedBy = username;
             }
 
-            _claims.Add(claim);
+            // SAVE TO DATABASE
+            _context.Claims.Add(claim);
+            _context.SaveChanges();
 
             TempData["Message"] = "Claim submitted successfully!";
             return RedirectToAction("TrackClaims");
@@ -91,28 +87,27 @@ namespace MonthlyClaimsApp.Controllers
         public IActionResult TrackClaims()
         {
             var username = HttpContext.Session.GetString("Username");
+
             if (string.IsNullOrWhiteSpace(username))
-            {
-                return View(_claims);
-            }
+                return View(_context.Claims.ToList());
 
-            var myClaims = _claims.Where(c =>
-                string.Equals(c.LecturerName, username, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(c.SubmittedBy, username, StringComparison.OrdinalIgnoreCase)
-                || (c.LecturerID != null && c.LecturerID.ToString() == username) // fallback
-            ).ToList();
+            var myClaims = _context.Claims
+                .Where(c =>
+                    c.LecturerName == username ||
+                    c.SubmittedBy == username ||
+                    (c.LecturerID != null && c.LecturerID.ToString() == username)
+                ).ToList();
 
-            // If the user has no own claims, return empty list to view
             return View(myClaims);
         }
 
         [HttpPost]
         public IActionResult UploadDocument(int claimId, IFormFile file)
         {
-            var claim = _claims.FirstOrDefault(c => c.ClaimID == claimId);
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimID == claimId);
+
             if (claim != null && file != null && file.Length > 0)
             {
-                // Save file
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
                 if (!Directory.Exists(uploadsFolder))
                     Directory.CreateDirectory(uploadsFolder);
@@ -126,9 +121,11 @@ namespace MonthlyClaimsApp.Controllers
                 }
 
                 claim.DocumentName = "/uploads/" + uniqueFileName;
-                ViewBag.Message = $"Document '{file.FileName}' uploaded for claim #{claimId}";
+
+                _context.SaveChanges();
             }
-            return View("TrackClaims", _claims);
+
+            return RedirectToAction("TrackClaims");
         }
     }
 }

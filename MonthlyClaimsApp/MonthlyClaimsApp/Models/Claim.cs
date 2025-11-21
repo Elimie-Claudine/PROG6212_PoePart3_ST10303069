@@ -18,6 +18,8 @@ namespace MonthlyClaimsApp.Models
         public string? VerifiedByRole { get; set; }  
         public DateTime? VerifiedDate { get; set; }
         public string? SubmittedBy { get; set; }
+        public string? AutoFlagReason { get; set; }
+        public string? RejectionReason { get; set; }
 
     }
 }
