@@ -21,13 +21,6 @@
             <div asp-validation-summary="All" class="text-danger mb-2"></div>
 
             <div class="form-group mb-3">
-                <label>Select Lecturer</label>
-                <select asp-for="LecturerID" class="form-control" asp-items="ViewBag.Lecturers" required>
-                    <option value="">--Select--</option>
-                </select>
-            </div>
-
-            <div class="form-group mb-3">
                 <label asp-for="HoursWorked"></label>
                 <input asp-for="HoursWorked" type="number" class="form-control" id="hoursInput" required />
             </div>

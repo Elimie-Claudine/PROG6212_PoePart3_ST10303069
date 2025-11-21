@@ -22,39 +22,67 @@ namespace MonthlyClaimsApp.Controllers
 
         public IActionResult SubmitClaim()
         {
-            ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
+            var lecturerId = HttpContext.Session.GetInt32("LecturerID");
+
+            if (lecturerId == null)
+            {
+                TempData["ErrorMessage"] = "Lecturer not logged in.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == lecturerId);
+
+            if (lecturer == null)
+            {
+                TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var claim = new Claim
+            {
+                LecturerID = lecturer.LecturerID,
+                LecturerName = lecturer.Name
+            };
+
             return View();
         }
+
 
 
 
         [HttpPost]
         public IActionResult SubmitClaim(Claim claim, IFormFile? file)
         {
-            // 1️⃣ Basic null check
-            if (claim == null)
+            var lecturerId = HttpContext.Session.GetInt32("LecturerID");
+
+            if (lecturerId == null)
             {
-                TempData["ErrorMessage"] = "Claim data is missing.";
-                return RedirectToAction("SubmitClaim");
+                TempData["ErrorMessage"] = "Lecturer not logged in.";
+                return RedirectToAction("Login", "Account");
             }
 
-            // 2️⃣ Validate HoursWorked and HourlyRate
-            if (claim.HoursWorked <= 0)
-                ModelState.AddModelError(nameof(claim.HoursWorked), "Hours must be > 0.");
-            if (claim.HourlyRate <= 0)
-                ModelState.AddModelError(nameof(claim.HourlyRate), "Rate must be > 0.");
-
-            if (!ModelState.IsValid)
+            var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == lecturerId);
+            if (lecturer == null)
             {
-                TempData["ErrorMessage"] = "Please correct the errors.";
+                TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
+                return RedirectToAction("Login", "Account");
+            }
 
-                ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
+            // Assign lecturer info automatically
+            claim.LecturerID = lecturer.LecturerID;
+            claim.LecturerName = lecturer.Name;
+
+            // Validate hours/rate and calculate total
+            if (claim.HoursWorked <= 0 || claim.HourlyRate <= 0)
+            {
+                TempData["ErrorMessage"] = "Hours and rate must be > 0.";
                 return View(claim);
             }
 
             claim.TotalAmount = claim.HoursWorked * claim.HourlyRate;
             claim.Status = "Pending";
 
+            // Save document if uploaded
             if (file != null && file.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
@@ -63,7 +91,6 @@ namespace MonthlyClaimsApp.Controllers
 
                 var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     file.CopyTo(stream);
@@ -72,33 +99,13 @@ namespace MonthlyClaimsApp.Controllers
                 claim.DocumentName = "/uploads/" + uniqueFileName;
             }
 
-
-            if (claim.LecturerID > 0)
-            {
-                var lecturer = _context.Lecturer.FirstOrDefault(l => l.LecturerID == claim.LecturerID);
-                if (lecturer == null)
-                {
-                    TempData["ErrorMessage"] = "Lecturer not found. Contact HR.";
-                    ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
-                    return View(claim);
-                }
-
-                claim.LecturerName = lecturer.Name;
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Please select a lecturer.";
-                ViewBag.Lecturers = new SelectList(_context.Lecturer, "LecturerID", "Name");
-                return View(claim);
-            }
-
-            // 6️⃣ Save claim
             _context.Claims.Add(claim);
             _context.SaveChanges();
 
             TempData["Message"] = "Claim submitted successfully!";
-            return RedirectToAction("SubmitClaim");
+            return RedirectToAction("Index");
         }
+
 
 
 
